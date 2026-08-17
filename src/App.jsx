@@ -7,19 +7,19 @@ import { useState, useRef, useEffect, useCallback } from "react";
 ═══════════════════════════════════════════════════════════════════ */
 const PACKAGES = [
   {
-    id: "double", name: "Double Snap", shots: 3, slots: 3, prints: 1,
+    id: "double", name: "Double Snap", shots: 3, prints: 1,
     label: "Rp 25.000", price: 25000, icon: "✦",
-    perks: ["3x kesempatan foto", "Pilih 3 foto terbaik", "Soft file (PNG)", "1x lembar print"],
+    perks: ["3x kesempatan foto", "Pilih 2 dari 3 foto", "Soft file (PNG)", "1x lembar print"],
   },
   {
-    id: "quatre", name: "Quatre Snap", shots: 5, slots: 4, prints: 1,
+    id: "triple", name: "Triple Snap", shots: 5, prints: 1,
     label: "Rp 40.000", price: 40000, icon: "✦✦", popular: true,
-    perks: ["5x kesempatan foto", "Pilih 4 foto terbaik", "Soft file (PNG)", "1x lembar print"],
+    perks: ["5x kesempatan foto", "Pilih 3 dari 5 foto", "Soft file (PNG)", "1x lembar print"],
   },
   {
-    id: "six", name: "Six Snap", shots: 7, slots: 6, prints: 2,
+    id: "six", name: "Six Snap", shots: 8, prints: 2,
     label: "Rp 60.000", price: 60000, icon: "✦✦✦",
-    perks: ["7x kesempatan foto", "Pilih 6 foto terbaik", "Soft file (PNG)", "2x lembar print"],
+    perks: ["8x kesempatan foto", "Pilih 6 dari 8 foto", "Soft file (PNG)", "2x lembar print"],
   },
 ];
 
@@ -34,196 +34,123 @@ const PACKAGES = [
      RED.PNG
 ═══════════════════════════════════════════════════════════════════ */
 const TEMPLATES = [
-
-  /* ── DOUBLE SNAP (2 slot) — placeholder fallback ── */
   {
-    id: "t2_plain", slots: 2, name: "Classic Red",
-    accent: "#EB4233", labelBg: "#5a0a06", stripBg: "#0d0100",
-    overlay: null, slotDefs: null, pngW: null, pngH: null,
-  },
-
-  /* ── QUATRE SNAP (4 slot) ── */
-
-  /* TPGPINK — 708×2000, 3 foto vertikal → pakai sbg 3-slot tapi
-     Six Snap pilih 4 dari 7, jadi template ini cocok utk Quatre
-     Slot 1: x=0.102 y=0.103 w=0.794 h=0.233
-     Slot 2: x=0.102 y=0.361 w=0.794 h=0.235
-     Slot 3: x=0.102 y=0.623 w=0.794 h=0.224  (hanya 3 slot → assign ke Quatre, slot 4 duplikat)
-  */
-  {
-    id: "t4_tpgblack", slots: 4, name: "Powerpuff Black",
-    accent: "#ff3399", labelBg: "#111111", stripBg: "#000000",
-    overlay: "/templates/TPGBLACK.PNG",
+    id: "t2_t3temp", slots: 2, name: "T3 Template",
+    accent: "#7b4cff", labelBg: "#17102b", stripBg: "#000000",
+    overlay: "/templates/T3-TEMP.png",
     slotDefs: [
-      { x: 0.102, y: 0.103, w: 0.794, h: 0.233 },
-      { x: 0.102, y: 0.361, w: 0.794, h: 0.235 },
-      { x: 0.102, y: 0.623, w: 0.794, h: 0.224 },
-      { x: 0.102, y: 0.623, w: 0.794, h: 0.224 },
+      { x: 105/724, y: 322/2048, w: 527/724, h: 525/2048 },
+      { x: 102/724, y: 929/2048, w: 520/724, h: 520/2048 },
     ],
-    pngW: 708, pngH: 2000,
+    pngW: 724, pngH: 2048,
   },
   {
-    id: "t4_tpgpink", slots: 4, name: "Powerpuff Pink",
-    accent: "#ff3399", labelBg: "#8b0050", stripBg: "#0d0008",
-    overlay: "/templates/TPGPINK.PNG",
+    id: "t2_perak2", slots: 2, name: "Perak 2",
+    accent: "#9b7a4a", labelBg: "#30251a", stripBg: "#000000",
+    overlay: "/templates/PERAK2.png",
     slotDefs: [
-      { x: 0.102, y: 0.103, w: 0.794, h: 0.233 },
-      { x: 0.102, y: 0.361, w: 0.794, h: 0.235 },
-      { x: 0.102, y: 0.623, w: 0.794, h: 0.224 },
-      // slot 4: reuse slot 3 posisi (user pilih 4 dari 5 foto, tapi template hanya 3 kotak)
-      // → template ini sebenarnya 3-slot, dipindah ke Double Snap di bawah
-      { x: 0.102, y: 0.623, w: 0.794, h: 0.224 },
+      { x: 105/724, y: 322/2048, w: 527/724, h: 525/2048 },
+      { x: 102/724, y: 929/2048, w: 520/724, h: 520/2048 },
     ],
-    pngW: 708, pngH: 2000,
+    pngW: 724, pngH: 2048,
   },
   {
-    id: "t4_plain", slots: 4, name: "Amber Glow",
-    accent: "#E5B41E", labelBg: "#7a5a00", stripBg: "#110d00",
-    overlay: null, slotDefs: null, pngW: null, pngH: null,
+    id: "t3_perak", slots: 3, name: "Perak",
+    accent: "#b08d57", labelBg: "#2b241a", stripBg: "#000000",
+    overlay: "/templates/PERAK.png",
+    slotDefs: [
+      { x: 74/724, y: 134/2048, w: 579/724, h: 404/2048 },
+      { x: 72/724, y: 659/2048, w: 580/724, h: 404/2048 },
+      { x: 75/724, y: 1185/2048, w: 579/724, h: 405/2048 },
+    ],
+    pngW: 724, pngH: 2048,
   },
-
-  /* ── SIX SNAP (6 slot) ── */
-
-  /* RED — 945×1417, 2 kolom × 3 baris = 6 slot
-     Baris 1: y=0.195 h=0.169  → kiri: x=0.081  kanan: x=0.500 (lebar masing2 ~0.380)
-     Baris 2: y=0.443 h=0.169
-     Baris 3: y=0.691 h=0.169
-     (template ini 2-kolom, jadi 6 slot ditata kiri-kanan bergantian)
-  */
   {
-    id: "t6_red", slots: 6, name: "A Box of Memories",
-    accent: "#cc0000", labelBg: "#880000", stripBg: "#f5f0e0",
+    id: "t3_t1", slots: 3, name: "T1 Template",
+    accent: "#8bc34a", labelBg: "#15210d", stripBg: "#000000",
+    overlay: "/templates/T1-TEMP.png",
+    slotDefs: [
+      { x: 64/724, y: 272/2048, w: 588/724, h: 404/2048 },
+      { x: 64/724, y: 830/2048, w: 590/724, h: 401/2048 },
+      { x: 64/724, y: 1389/2048, w: 590/724, h: 401/2048 },
+    ],
+    pngW: 724, pngH: 2048,
+  },
+  {
+    id: "t3_t2", slots: 3, name: "T2 Template",
+    accent: "#e6b84a", labelBg: "#2b210d", stripBg: "#000000",
+    overlay: "/templates/T2-TEMP.png",
+    slotDefs: [
+      { x: 61/724, y: 293/2048, w: 604/724, h: 413/2048 },
+      { x: 61/724, y: 760/2048, w: 604/724, h: 413/2048 },
+      { x: 61/724, y: 1228/2048, w: 604/724, h: 413/2048 },
+    ],
+    pngW: 724, pngH: 2048,
+  },
+  {
+    id: "t3_hirono", slots: 3, name: "Hirono",
+    accent: "#c89f52", labelBg: "#332714", stripBg: "#000000",
+    overlay: "/templates/HIRONO.png",
+    slotDefs: [
+      { x: 148/724, y: 206/2048, w: 420/724, h: 312/2048 },
+      { x: 78/724, y: 824/2048, w: 423/724, h: 314/2048 },
+      { x: 78/724, y: 1505/2048, w: 419/724, h: 313/2048 },
+    ],
+    pngW: 724, pngH: 2048,
+  },
+  {
+    id: "t3_roti", slots: 3, name: "Roti",
+    accent: "#d49a4a", labelBg: "#3a210d", stripBg: "#000000",
+    overlay: "/templates/ROTI.png",
+    slotDefs: [
+      { x: 77/724, y: 126/2048, w: 538/724, h: 476/2048 },
+      { x: 105/724, y: 813/2048, w: 504/724, h: 469/2048 },
+      { x: 108/724, y: 1417/2048, w: 540/724, h: 477/2048 },
+    ],
+    pngW: 724, pngH: 2048,
+  },
+  {
+    id: "t3_kucing", slots: 3, name: "Kucing",
+    accent: "#ff9fc4", labelBg: "#34202a", stripBg: "#000000",
+    overlay: "/templates/KUCING.png",
+    slotDefs: [
+      { x: 61/724, y: 293/2048, w: 604/724, h: 413/2048 },
+      { x: 61/724, y: 760/2048, w: 604/724, h: 413/2048 },
+      { x: 61/724, y: 1228/2048, w: 604/724, h: 413/2048 },
+    ],
+    pngW: 724, pngH: 2048,
+  },
+  {
+    id: "t3_spiderman", slots: 3, name: "Spiderman",
+    accent: "#ff3333", labelBg: "#3a0000", stripBg: "#000000",
+    overlay: "/templates/SPIDERMAN.png",
+    slotDefs: [
+      { x: 61/724, y: 293/2048, w: 604/724, h: 413/2048 },
+      { x: 61/724, y: 760/2048, w: 604/724, h: 413/2048 },
+      { x: 61/724, y: 1228/2048, w: 604/724, h: 413/2048 },
+    ],
+    pngW: 724, pngH: 2048,
+  },
+  {
+    id: "t6_red", slots: 6, name: "RED",
+    accent: "#e00000", labelBg: "#e00000", stripBg: "#eee7d8",
     overlay: "/templates/RED.PNG",
+    // RED.PNG berukuran 945 × 1417 dan memiliki 6 slot:
+    // 2 kolom × 3 baris.
     slotDefs: [
-      { x: 0.081, y: 0.195, w: 0.380, h: 0.169 }, // baris1 kiri
-      { x: 0.500, y: 0.195, w: 0.380, h: 0.169 }, // baris1 kanan
-      { x: 0.081, y: 0.443, w: 0.380, h: 0.169 }, // baris2 kiri
-      { x: 0.500, y: 0.443, w: 0.380, h: 0.169 }, // baris2 kanan
-      { x: 0.081, y: 0.691, w: 0.380, h: 0.169 }, // baris3 kiri
-      { x: 0.500, y: 0.691, w: 0.380, h: 0.169 }, // baris3 kanan
+      { x: 77/945,  y: 276/1417, w: 319/945, h: 241/1417 },
+      { x: 549/945, y: 276/1417, w: 319/945, h: 241/1417 },
+      { x: 77/945,  y: 628/1417, w: 319/945, h: 240/1417 },
+      { x: 549/945, y: 628/1417, w: 319/945, h: 240/1417 },
+      { x: 77/945,  y: 979/1417, w: 319/945, h: 241/1417 },
+      { x: 549/945, y: 979/1417, w: 319/945, h: 241/1417 },
     ],
-    pngW: 945, pngH: 1417,
-  },
-
-  /* ENVELOPE — 1414×4000, 3 slot vertikal
-     Slot 1: x=0.117 y=0.077 w=0.765 h=0.157
-     Slot 2: x=0.117 y=0.321 w=0.764 h=0.157
-     Slot 3: x=0.119 y=0.564 w=0.763 h=0.157
-     (3 slot → cocok Double Snap, dipindah ke bawah)
-  */
-  {
-    id: "t6_envelope", slots: 6, name: "Graduation Envelope",
-    accent: "#cc3300", labelBg: "#6b3800", stripBg: "#c8a060",
-    overlay: "/templates/ENVELOPE.PNG",
-    // 3 slot asli → duplikat untuk 6: tampilkan 2 copy strip side by side di canvas
-    slotDefs: [
-      { x: 0.117, y: 0.077, w: 0.765, h: 0.157 },
-      { x: 0.117, y: 0.321, w: 0.764, h: 0.157 },
-      { x: 0.119, y: 0.564, w: 0.763, h: 0.157 },
-      { x: 0.117, y: 0.077, w: 0.765, h: 0.157 },
-      { x: 0.117, y: 0.321, w: 0.764, h: 0.157 },
-      { x: 0.119, y: 0.564, w: 0.763, h: 0.157 },
-    ],
-    pngW: 1414, pngH: 4000,
-  },
-
-  {
-    id: "t6_plain", slots: 6, name: "Classic Dark",
-    accent: "#c07050", labelBg: "#2a100e", stripBg: "#0d0200",
-    overlay: null, slotDefs: null, pngW: null, pngH: null,
+    pngW: 945,
+    pngH: 1417,
   },
 ];
 
-/* ── DOUBLE SNAP templates (3-slot display, user ambil 3 pilih 2 tapi kita set slots=3 karena template punya 3 kotak) ──
-   Ditambahkan sebagai const terpisah dan di-merge ke TEMPLATES di bawah */
-const TEMPLATES_DOUBLE = [
-  {
-    id: "t3_tpgblack_d", slots: 3, name: "Powerpuff Black",
-    accent: "#ff3399", labelBg: "#111111", stripBg: "#000000",
-    overlay: "/templates/TPGBLACK.PNG",
-    slotDefs: [
-      { x: 0.102, y: 0.103, w: 0.794, h: 0.233 },
-      { x: 0.102, y: 0.361, w: 0.794, h: 0.235 },
-      { x: 0.102, y: 0.623, w: 0.794, h: 0.224 },
-    ],
-    pngW: 708, pngH: 2000,
-  },
-  {
-    id: "t3_tpgpink_d", slots: 3, name: "Powerpuff Pink",
-    accent: "#ff3399", labelBg: "#8b0050", stripBg: "#0d0008",
-    overlay: "/templates/TPGPINK.PNG",
-    slotDefs: [
-      { x: 0.102, y: 0.103, w: 0.794, h: 0.233 },
-      { x: 0.102, y: 0.361, w: 0.794, h: 0.235 },
-      { x: 0.102, y: 0.623, w: 0.794, h: 0.224 },
-    ],
-    pngW: 708, pngH: 2000,
-  },
-  {
-    id: "t3_indomie", slots: 3, name: "Indomie Graduation",
-    accent: "#e63900", labelBg: "#8b2000", stripBg: "#f5c800",
-    overlay: "/templates/INDOMIE.PNG",
-    slotDefs: [
-      { x: 0.100, y: 0.160, w: 0.799, h: 0.249 },
-      { x: 0.100, y: 0.423, w: 0.799, h: 0.249 },
-      { x: 0.100, y: 0.686, w: 0.799, h: 0.231 },
-    ],
-    pngW: 1414, pngH: 4000,
-  },
-  {
-    id: "t3_hirono", slots: 3, name: "Hirono Graduation",
-    accent: "#8b6914", labelBg: "#3d2c00", stripBg: "#e8dfc0",
-    overlay: "/templates/HIRONO.PNG",
-    slotDefs: [
-      { x: 0.2419, y: 0.1225, w: 0.4809, h: 0.1675 },
-      { x: 0.1570, y: 0.3865, w: 0.4823, h: 0.1265 },
-      { x: 0.1528, y: 0.6360, w: 0.4922, h: 0.1650 },
-    ],
-    pngW: 707, pngH: 2000,
-  },
-  {
-    id: "t3_envelope", slots: 3, name: "Graduation Envelope",
-    accent: "#cc3300", labelBg: "#6b3800", stripBg: "#c8a060",
-    overlay: "/templates/ENVELOPE.PNG",
-    slotDefs: [
-      { x: 0.117, y: 0.077, w: 0.765, h: 0.157 },
-      { x: 0.117, y: 0.321, w: 0.764, h: 0.157 },
-      { x: 0.119, y: 0.564, w: 0.763, h: 0.157 },
-    ],
-    pngW: 1414, pngH: 4000,
-  },
-  {
-    id: "t3_hirono2", slots: 3, name: "Hirono Ver.2",
-    accent: "#c8860a", labelBg: "#5a3800", stripBg: "#f0e6c8",
-    overlay: "/templates/HIRONO2.PNG",
-    // Same slot positions as Hirono — ganti PNG-nya saja
-    slotDefs: [
-      { x: 0.2419, y: 0.1225, w: 0.4809, h: 0.1375 },
-      { x: 0.1570, y: 0.3865, w: 0.4823, h: 0.1265 },
-      { x: 0.1528, y: 0.6360, w: 0.4922, h: 0.1390 },
-    ],
-    pngW: 707, pngH: 2000,
-  },
-  {
-    id: "t3_indonesia81", slots: 3, name: "HUT RI 81",
-    accent: "#cc0000", labelBg: "#8b0000", stripBg: "#ffffff",
-    overlay: "/templates/INDONESIA81.PNG",
-    slotDefs: [
-      { x: 0.100, y: 0.160, w: 0.799, h: 0.220 },
-      { x: 0.100, y: 0.410, w: 0.799, h: 0.220 },
-      { x: 0.100, y: 0.660, w: 0.799, h: 0.220 },
-    ],
-    pngW: 1050, pngH: 2970,
-  },
-  {
-    id: "t3_plain", slots: 3, name: "Classic Red",
-    accent: "#EB4233", labelBg: "#5a0a06", stripBg: "#0d0100",
-    overlay: null, slotDefs: null, pngW: null, pngH: null,
-  },
-];
-
-// Merge: Double Snap pakai TEMPLATES_DOUBLE, sisanya pakai TEMPLATES
-const ALL_TEMPLATES = [...TEMPLATES_DOUBLE, ...TEMPLATES];
+const ALL_TEMPLATES = TEMPLATES;
 
 /* ═══════════════════════════════════════════════════════════════════
    FILTERS
@@ -385,7 +312,7 @@ function LiveFeed({ videoRef, filter, aspectRatio = "4/3" }) {
    Otherwise falls back to generic vertical strip
 ═══════════════════════════════════════════════════════════════════ */
 function StripPreview({ pkg, template, photos = [], liveVideoRef = null, activeSlot = null, filter = null, scale = 1 }) {
-  const slots = pkg.slots;
+  const slots = template.slots;
 
   // ── Template-based preview (PNG with exact slot positions) ──
   if (template.overlay && template.slotDefs) {
@@ -582,14 +509,24 @@ function PaymentPage({ pkg, onConfirm }) {
 ═══════════════════════════════════════════════════════════════════ */
 function TemplatePage({ pkg, onSelect }) {
   const [sel, setSel] = useState(null);
-  const available = ALL_TEMPLATES.filter(t => t.slots === pkg.slots);
+
+  // Template dikunci berdasarkan paket:
+  // Double = hanya PERAK2 (2 slot)
+  // Triple = hanya template 3 slot
+  // Six   = hanya RED (6 slot)
+  const available = ALL_TEMPLATES.filter(t => {
+    if (pkg?.id === "double") return t.id === "t2_perak2";
+    if (pkg?.id === "triple") return t.slots === 3;
+    if (pkg?.id === "six") return t.id === "t6_red";
+    return false;
+  });
   return (
     <Screen>
       <div style={{ width: "100%", maxWidth: 960, zIndex: 1 }}>
         <div className="fade-up" style={{ textAlign: "center", marginBottom: 40 }}>
           <p style={{ fontFamily: "'Raleway',sans-serif", letterSpacing: "0.3em", fontSize: 11, color: "#EB4233", textTransform: "uppercase", marginBottom: 10 }}>Langkah 3 dari 4</p>
           <h2 style={{ fontFamily: "'Cinzel',serif", fontWeight: 700, fontSize: "clamp(22px,5vw,38px)", color: "#f5e6d0" }}>Pilih Template Strip</h2>
-          <p style={{ fontFamily: "'Raleway',sans-serif", fontSize: 13, color: "#a07060", marginTop: 8 }}>Paket <strong style={{ color: "#EB4233" }}>{pkg.name}</strong> — {pkg.slots} foto masuk ke strip</p>
+          <p style={{ fontFamily: "'Raleway',sans-serif", fontSize: 13, color: "#a07060", marginTop: 8 }}>Paket <strong style={{ color: "#EB4233" }}>{pkg.name}</strong> — template tersedia sesuai kapasitas paket</p>
           <div style={{ width: 36, height: 1, background: "#EB4233", margin: "14px auto 0" }} />
         </div>
         <div className="fade-up2" style={{ display: "flex", gap: 20, justifyContent: "center", flexWrap: "wrap", marginBottom: 40, alignItems: "flex-start" }}>
@@ -597,7 +534,7 @@ function TemplatePage({ pkg, onSelect }) {
             // Calculate preview height to keep it reasonable regardless of template aspect ratio
             const aspect = t.pngW && t.pngH ? t.pngH / t.pngW : 2.5;
             const previewW = 160;
-            const previewH = Math.min(previewW * aspect, 340);
+            const previewH = Math.min(previewW * aspect, 420);
             const sc = previewW / (t.pngW || 160);
             return (
               <div key={t.id} className={`tmpl-wrap${sel?.id === t.id ? " sel" : ""}`} onClick={() => setSel(t)}>
@@ -638,11 +575,11 @@ function CameraPage({ pkg, template, queueNum, onDone }) {
         const h = s.h * (template.pngH || 1120);
         return `${w}/${h}`;
       })
-    : Array(pkg.slots).fill("4/3");
-  const slotAspect = slotAspects[0]; // untuk viewfinder kamera
+    : Array(template.slots).fill("4/3");
+  const cameraAspect = "16/9"; // kamera selalu landscape agar lebih banyak orang muat dalam satu frame
 
   useEffect(() => {
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: 1280, height: 720 }, audio: false })
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: 1920, height: 1080 }, audio: false })
       .then(s => { streamRef.current = s; if (videoRef.current) videoRef.current.srcObject = s; })
       .catch(() => setCamError(true));
     return () => streamRef.current?.getTracks().forEach(t => t.stop());
@@ -651,7 +588,7 @@ function CameraPage({ pkg, template, queueNum, onDone }) {
   const captureFrame = useCallback((slotIndex = 0) => {
     const v = videoRef.current, c = canvasRef.current;
     if (!v || !c) return null;
-    const aspect = slotAspects[slotIndex] || slotAspects[0] || "4/3";
+    const aspect = cameraAspect;
     const [aw, ah] = aspect.split("/").map(Number);
     c.width = 1280; c.height = Math.round(1280 * ah / aw);
     const ctx = c.getContext("2d");
@@ -666,7 +603,7 @@ function CameraPage({ pkg, template, queueNum, onDone }) {
     ctx.restore(); ctx.filter = "none";
     if (activeFilter.overlayEmoji) drawEmojiOverlay(ctx, activeFilter.overlayEmoji, c.width, c.height);
     return c.toDataURL("image/png");
-  }, [activeFilter, slotAspects]);
+  }, [activeFilter]);
 
   const startCapture = useCallback(() => {
     if (countdown !== null || takenPhotos.length >= pkg.shots) return;
@@ -692,11 +629,11 @@ function CameraPage({ pkg, template, queueNum, onDone }) {
     <Screen style={{ justifyContent: "flex-start", paddingTop: 24 }}>
       {flash && <div className="flash-overlay" />}
       <canvas ref={canvasRef} style={{ display: "none" }} />
-      <div style={{ width: "100%", maxWidth: 960, zIndex: 1 }}>
+      <div style={{ width: "100%", maxWidth: 1200, zIndex: 1 }}>
         <div className="fade-up" style={{ textAlign: "center", marginBottom: 18 }}>
           <p style={{ fontFamily: "'Raleway',sans-serif", letterSpacing: "0.3em", fontSize: 11, color: "#EB4233", textTransform: "uppercase", marginBottom: 6 }}>Antrian <strong>{queueNum}</strong> · Sesi Foto</p>
           <h2 style={{ fontFamily: "'Cinzel',serif", fontWeight: 700, fontSize: 24, color: "#f5e6d0" }}>
-            {doneCapturing ? `Pilih ${pkg.slots} foto terbaik ↓` : `${remaining} kesempatan foto tersisa`}
+            {doneCapturing ? `Pilih sesuai kapasitas template (${template.slots} foto) ↓` : `${remaining} kesempatan foto tersisa`}
           </h2>
         </div>
 
@@ -704,17 +641,17 @@ function CameraPage({ pkg, template, queueNum, onDone }) {
           // ── SHOOTING MODE ──
           <div style={{ display: "flex", gap: 20, alignItems: "flex-start", flexWrap: "wrap", justifyContent: "center" }}>
             {/* Camera */}
-            <div style={{ flex: "1 1 340px", minWidth: 280, maxWidth: 520 }}>
+            <div style={{ flex: "1 1 680px", minWidth: 320, maxWidth: 760 }}>
               {camError ? (
-                <div style={{ width: "100%", aspectRatio: slotAspects[takenPhotos.length] || slotAspect, background: "#0d0000", border: "1px solid #2a0e00", borderRadius: 12, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10 }}>
+                <div style={{ width: "100%", aspectRatio: cameraAspect, background: "#0d0000", border: "1px solid #2a0e00", borderRadius: 12, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10 }}>
                   <div style={{ fontSize: 40 }}>📷</div>
                   <p style={{ fontFamily: "'Raleway',sans-serif", color: "#a07060", fontSize: 12, textAlign: "center", padding: "0 20px" }}>Kamera tidak terdeteksi.</p>
                 </div>
               ) : (
                 <div style={{ position: "relative", borderRadius: 12, overflow: "hidden", border: `3px solid ${template.accent}` }}>
                   <video ref={videoRef} autoPlay playsInline muted style={{ width: "100%", display: "block", opacity: 0, position: "absolute", pointerEvents: "none" }} />
-                  <div style={{ width: "100%", aspectRatio: slotAspects[takenPhotos.length] || slotAspect, position: "relative", overflow: "hidden" }}>
-                    <LiveFeed videoRef={videoRef} filter={activeFilter} aspectRatio={slotAspects[takenPhotos.length] || slotAspect} />
+                  <div style={{ width: "100%", aspectRatio: cameraAspect, position: "relative", overflow: "hidden" }}>
+                    <LiveFeed videoRef={videoRef} filter={activeFilter} aspectRatio={cameraAspect} />
                   </div>
                   {countdown !== null && (
                     <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "#00000088" }}>
@@ -770,6 +707,44 @@ function CameraPage({ pkg, template, queueNum, onDone }) {
    PHOTO SELECTION MODE
    User pilih mana saja yang masuk ke strip
 ═══════════════════════════════════════════════════════════════════ */
+
+async function uploadPhotoToSupabase(dataUrl, fileName) {
+  const SUPABASE_URL = "https://jziiemzakocgpwbiwyjv.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_97_3oaKQfyWHjmo6pSLvHg_CP_QFb88";
+
+  const response = await fetch(dataUrl);
+  const blob = await response.blob();
+
+  const uploadResponse = await fetch(
+    `${SUPABASE_URL}/storage/v1/object/photostrips/${encodeURIComponent(fileName)}`,
+    {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_PUBLISHABLE_KEY,
+        Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+        "Content-Type": "image/png",
+        "x-upsert": "false",
+      },
+      body: blob,
+    }
+  );
+
+  if (!uploadResponse.ok) {
+    let message = "Upload foto ke Supabase gagal";
+    try {
+      const data = await uploadResponse.json();
+      if (data?.message) message = data.message;
+      else if (data?.error) message = data.error;
+    } catch (_) {}
+    throw new Error(message);
+  }
+
+  return {
+    id: fileName,
+    url: `${SUPABASE_URL}/storage/v1/object/public/photostrips/${encodeURIComponent(fileName)}`,
+  };
+}
+
 function PhotoSelectionMode({ takenPhotos, pkg, template, queueNum, onDone }) {
   const [chosen, setChosen] = useState([]); // indices of chosen photos
   const [processing, setProcessing] = useState(false);
@@ -777,17 +752,20 @@ function PhotoSelectionMode({ takenPhotos, pkg, template, queueNum, onDone }) {
   const toggle = (idx) => {
     if (chosen.includes(idx)) {
       setChosen(chosen.filter(i => i !== idx));
-    } else if (chosen.length < pkg.slots) {
+    } else if (chosen.length < template.slots) {
       setChosen([...chosen, idx]);
     }
   };
 
   const selectedPhotos = chosen.map(i => takenPhotos[i]);
-  const ready = chosen.length === pkg.slots;
+  const ready = chosen.length === template.slots;
 
   const buildAndSave = useCallback(async () => {
     setProcessing(true);
     const photos = selectedPhotos;
+    let finalDataUrl = null;
+
+    try {
 
     // ── If template has slotDefs, composite onto PNG ──
     if (template.overlay && template.slotDefs) {
@@ -828,8 +806,10 @@ function PhotoSelectionMode({ takenPhotos, pkg, template, queueNum, onDone }) {
       ctx.font = "11px sans-serif"; ctx.textAlign = "center";
       ctx.fillText(`AUDEAPIX · ${pkg.name} · No.${queueNum} · ${new Date().toLocaleDateString("id-ID")}`, PW / 2, PH - 14);
 
+      finalDataUrl = oc.toDataURL("image/png");
+
       const link = document.createElement("a");
-      link.href = oc.toDataURL("image/png");
+      link.href = finalDataUrl;
       link.download = `photostrip-${queueNum}.png`;
       link.click();
 
@@ -861,14 +841,37 @@ function PhotoSelectionMode({ takenPhotos, pkg, template, queueNum, onDone }) {
       ctx.fillStyle = "rgba(255,255,255,.45)"; ctx.font = "10px sans-serif"; ctx.textAlign = "center";
       ctx.fillText(`audeapix.photobooth · ${new Date().toLocaleDateString("id-ID")}`, SW / 2, FY + 17);
       ctx.fillText(`${pkg.name} · No.${queueNum}`, SW / 2, FY + 33);
+      finalDataUrl = oc.toDataURL("image/png");
+
       const link = document.createElement("a");
-      link.href = oc.toDataURL("image/png");
+      link.href = finalDataUrl;
       link.download = `photostrip-${queueNum}.png`;
       link.click();
     }
 
+    if (!finalDataUrl) {
+      throw new Error("Gagal membuat hasil foto");
+    }
+
+    // Upload hasil final ke Supabase Storage.
+    // Foto tetap bisa didownload lokal walaupun upload gagal.
+    const fileName = `photostrip-${queueNum}-${Date.now()}.png`;
+    const uploaded = await uploadPhotoToSupabase(finalDataUrl, fileName);
+
     setProcessing(false);
-    onDone(selectedPhotos);
+    onDone({
+      selectedPhotos,
+      finalDataUrl,
+      photoId: uploaded.id,
+      photoUrl: uploaded.url,
+    });
+    } catch (error) {
+      console.error("Photo processing/upload error:", error);
+      setProcessing(false);
+      window.alert(
+        `Hasil foto sudah dibuat, tetapi gagal dikirim ke server.\n\n${error.message}`
+      );
+    }
   }, [selectedPhotos, template, pkg, queueNum, onDone]);
 
   return (
@@ -876,14 +879,14 @@ function PhotoSelectionMode({ takenPhotos, pkg, template, queueNum, onDone }) {
       {/* Left: photo grid to pick from */}
       <div style={{ flex: "1 1 420px", maxWidth: 600 }}>
         <p style={{ fontFamily: "'Raleway',sans-serif", fontSize: 13, color: "#c09070", marginBottom: 16, lineHeight: 1.7 }}>
-          Pilih <strong style={{ color: "#EB4233" }}>{pkg.slots} foto</strong> yang masuk ke strip ({chosen.length}/{pkg.slots} dipilih)
+          Pilih <strong style={{ color: "#EB4233" }}>{template.slots} foto</strong> yang masuk ke strip ({chosen.length}/{template.slots} dipilih)
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: 10 }}>
           {takenPhotos.map((photo, i) => {
             const isChosen = chosen.includes(i);
-            const isFull   = !isChosen && chosen.length >= pkg.slots;
+            const isFull   = !isChosen && chosen.length >= template.slots;
             return (
-              <div key={i} className={`photo-thumb${isChosen ? " chosen" : ""}${isFull ? " full" : ""}`} onClick={() => !isFull && toggle(i)} style={{ aspectRatio: "4/3" }}>
+              <div key={i} className={`photo-thumb${isChosen ? " chosen" : ""}${isFull ? " full" : ""}`} onClick={() => !isFull && toggle(i)} style={{ aspectRatio: "16/9" }}>
                 <img src={photo} alt={`Foto ${i + 1}`} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 {/* Order badge */}
                 {isChosen && (
@@ -902,7 +905,7 @@ function PhotoSelectionMode({ takenPhotos, pkg, template, queueNum, onDone }) {
         </div>
         <div style={{ marginTop: 20, display: "flex", gap: 10 }}>
           <button className="glow-btn" disabled={!ready || processing} onClick={buildAndSave} style={{ flex: 1, background: ready ? "linear-gradient(135deg,#EB4233,#a02818)" : "#200800", color: ready ? "#fff" : "#4a1a0a", fontFamily: "'Cinzel',serif", fontWeight: 600, fontSize: 13, letterSpacing: "0.15em", padding: "14px", borderRadius: 8, textTransform: "uppercase", cursor: ready ? "pointer" : "not-allowed", animation: ready ? undefined : "none" }}>
-            {processing ? "Menyimpan..." : ready ? `✓ Simpan & Lanjut` : `Pilih ${pkg.slots - chosen.length} foto lagi`}
+            {processing ? "Menyimpan..." : ready ? `✓ Simpan & Lanjut` : `Pilih ${template.slots - chosen.length} foto lagi`}
           </button>
         </div>
       </div>
@@ -919,39 +922,198 @@ function PhotoSelectionMode({ takenPhotos, pkg, template, queueNum, onDone }) {
 /* ═══════════════════════════════════════════════════════════════════
    PAGE 6 — TIKET ANTRIAN
 ═══════════════════════════════════════════════════════════════════ */
-function QueueTicketPage({ queueNum, pkg, template, onHome }) {
-  const baseUrl = window.location.origin + window.location.pathname.replace(/\/$/, "");
-  const displayUrl = `${baseUrl}#/queue/${queueNum}`;
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(displayUrl)}`;
+function QueueTicketPage({ queueNum, pkg, template, photoUrl, onHome }) {
+  const qrUrl = photoUrl
+    ? `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(photoUrl)}`
+    : null;
+
   return (
     <Screen>
-      <div style={{ width: "100%", maxWidth: 480, zIndex: 1, textAlign: "center" }}>
+      <div style={{ width: "100%", maxWidth: 520, zIndex: 1, textAlign: "center" }}>
         <div className="fade-up" style={{ marginBottom: 24 }}>
           <p style={{ fontFamily: "'Raleway',sans-serif", letterSpacing: "0.3em", fontSize: 11, color: "#EB4233", textTransform: "uppercase", marginBottom: 10 }}>Sesi Selesai ✓</p>
-          <h2 style={{ fontFamily: "'Cinzel',serif", fontWeight: 700, fontSize: "clamp(22px,5vw,36px)", color: "#f5e6d0", marginBottom: 6 }}>Tiket Antrian</h2>
-          <p style={{ fontFamily: "'Raleway',sans-serif", fontSize: 12, color: "#a07060" }}>Tunjukkan halaman ini atau scan QR ke kasir</p>
+          <h2 style={{ fontFamily: "'Cinzel',serif", fontWeight: 700, fontSize: "clamp(22px,5vw,36px)", color: "#f5e6d0", marginBottom: 6 }}>Foto Kamu Siap!</h2>
+          <p style={{ fontFamily: "'Raleway',sans-serif", fontSize: 12, color: "#a07060" }}>Scan QR untuk melihat dan menyimpan hasil foto dari HP.</p>
         </div>
-        <div className="fade-up2" style={{ background: "linear-gradient(135deg,#1a0400,#0d0000)", border: `2px solid ${template.accent}`, borderRadius: 20, padding: "32px 28px", marginBottom: 24, boxShadow: `0 0 60px ${template.accent}44` }}>
+
+        <div className="fade-up2" style={{ background: "linear-gradient(135deg,#1a0400,#0d0000)", border: `2px solid ${template.accent}`, borderRadius: 20, padding: "28px", marginBottom: 22, boxShadow: `0 0 60px ${template.accent}44` }}>
           <p style={{ fontFamily: "'Raleway',sans-serif", fontSize: 11, color: "#a07060", letterSpacing: "0.3em", textTransform: "uppercase", marginBottom: 8 }}>No. Antrian</p>
-          <div className="queue-num" style={{ fontFamily: "'Cinzel',serif", fontWeight: 900, fontSize: 96, lineHeight: 1, color: template.accent, textShadow: `0 0 40px ${template.accent}99` }}>{queueNum}</div>
-          <div style={{ width: 40, height: 1, background: template.accent + "55", margin: "16px auto" }} />
-          <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "'Raleway',sans-serif", fontSize: 12, color: "#a07060" }}>
+          <div className="queue-num" style={{ fontFamily: "'Cinzel',serif", fontWeight: 900, fontSize: 78, lineHeight: 1, color: template.accent, textShadow: `0 0 40px ${template.accent}99` }}>{queueNum}</div>
+          <div style={{ width: 40, height: 1, background: template.accent + "55", margin: "14px auto" }} />
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 12, fontFamily: "'Raleway',sans-serif", fontSize: 12, color: "#a07060" }}>
             <span>Paket: <strong style={{ color: "#f5e6d0" }}>{pkg.name}</strong></span>
             <span>{pkg.prints}x lembar print</span>
           </div>
         </div>
+
         <div className="fade-up3" style={{ marginBottom: 24 }}>
-          <p style={{ fontFamily: "'Raleway',sans-serif", fontSize: 11, color: "#a07060", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>Scan QR untuk Kasir</p>
-          <div style={{ background: "#fff", display: "inline-block", borderRadius: 12, padding: 12, boxShadow: `0 0 30px ${template.accent}33` }}>
-            <img src={qrUrl} alt="QR" width={160} height={160} style={{ display: "block", borderRadius: 6 }} />
+          <p style={{ fontFamily: "'Raleway',sans-serif", fontSize: 11, color: "#a07060", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>
+            Scan QR untuk hasil foto
+          </p>
+
+          {qrUrl ? (
+            <>
+              <div style={{ background: "#fff", display: "inline-block", borderRadius: 14, padding: 14, boxShadow: `0 0 30px ${template.accent}33` }}>
+                <img src={qrUrl} alt="QR hasil foto" width={220} height={220} style={{ display: "block", borderRadius: 6 }} />
+              </div>
+              <p style={{ fontFamily: "'Raleway',sans-serif", fontSize: 10, color: "#6a4638", marginTop: 10 }}>
+                QR ini membuka foto yang tersimpan di Supabase Storage.
+              </p>
+            </>
+          ) : (
+            <div style={{ padding: 20, border: "1px dashed #EB4233", borderRadius: 10, color: "#EB4233", fontFamily: "'Raleway',sans-serif", fontSize: 12 }}>
+              URL foto belum tersedia.
+            </div>
+          )}
+        </div>
+
+        <div className="fade-up4" style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: "center" }}>
+          {photoUrl && (
+            <a
+              href={photoUrl}
+              target="_blank"
+              rel="noreferrer"
+              style={{
+                display: "inline-block",
+                background: "linear-gradient(135deg,#EB4233,#a02818)",
+                color: "#fff",
+                fontFamily: "'Cinzel',serif",
+                fontWeight: 600,
+                fontSize: 12,
+                letterSpacing: "0.15em",
+                padding: "13px 30px",
+                borderRadius: 4,
+                textTransform: "uppercase",
+                textDecoration: "none",
+              }}
+            >
+              Buka Hasil Foto
+            </a>
+          )}
+
+          <button className="glow-btn" onClick={onHome} style={{ background: "transparent", border: "1px solid #EB4233", color: "#EB4233", fontFamily: "'Cinzel',serif", fontWeight: 600, fontSize: 12, letterSpacing: "0.2em", padding: "12px 30px", borderRadius: 4, textTransform: "uppercase" }}>
+            ← Kembali ke Home
+          </button>
+
+          <p style={{ fontFamily: "'Raleway',sans-serif", fontSize: 10, color: "#4a1a0a", marginTop: 4 }}>
+            Admin: tekan tombol di atas untuk sesi berikutnya
+          </p>
+
+          <button onClick={() => { if (window.confirm("Reset antrian ke 001?")) resetQueue(); }} style={{ marginTop: 2, background: "transparent", border: "1px dashed #2a0e00", color: "#3a1200", fontFamily: "'Raleway',sans-serif", fontSize: 10, padding: "6px 18px", borderRadius: 4, cursor: "pointer", textTransform: "uppercase" }}>
+            🔄 Reset Antrian (Admin)
+          </button>
+        </div>
+      </div>
+    </Screen>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PHOTO VIEWER — halaman yang dibuka dari QR
+   URL: #/photo/:id
+═══════════════════════════════════════════════════════════════════ */
+function PhotoViewerPage({ photoId }) {
+  const [status, setStatus] = useState("loading");
+  const [photoUrl, setPhotoUrl] = useState("");
+
+  useEffect(() => {
+    setPhotoUrl(`https://jziiemzakocgpwbiwyjv.supabase.co/storage/v1/object/public/photostrips/${encodeURIComponent(photoId)}`);
+    setStatus("ready");
+  }, [photoId]);
+
+  return (
+    <Screen>
+      <div style={{ width: "100%", maxWidth: 620, zIndex: 1, textAlign: "center" }}>
+        <div className="fade-up" style={{ marginBottom: 22 }}>
+          <p style={{ fontFamily: "'Raleway',sans-serif", letterSpacing: "0.35em", fontSize: 11, color: "#EB4233", textTransform: "uppercase", marginBottom: 10 }}>
+            AUDEAPIX PHOTOBOOTH
+          </p>
+          <h1 style={{ fontFamily: "'Cinzel',serif", fontWeight: 900, fontSize: "clamp(28px,7vw,52px)", color: "#f5e6d0" }}>
+            Your Moment
+          </h1>
+          <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: 20, color: "#c9a07a", marginTop: 6 }}>
+            Where every moment becomes a masterpiece
+          </p>
+        </div>
+
+        {status === "loading" && (
+          <div style={{ padding: 50, color: "#a07060", fontFamily: "'Raleway',sans-serif" }}>
+            Memuat hasil foto...
           </div>
-          <p style={{ fontFamily: "'Raleway',sans-serif", fontSize: 10, color: "#4a1a0a", marginTop: 8 }}>Strip: <strong>photostrip-{queueNum}.png</strong> sudah tersimpan</p>
-        </div>
-        <div className="fade-up4">
-          <button className="glow-btn" onClick={onHome} style={{ background: "linear-gradient(135deg,#EB4233,#a02818)", color: "#fff", fontFamily: "'Cinzel',serif", fontWeight: 600, fontSize: 12, letterSpacing: "0.2em", padding: "13px 38px", borderRadius: 4, textTransform: "uppercase" }}>← Kembali ke Home</button>
-          <p style={{ fontFamily: "'Raleway',sans-serif", fontSize: 10, color: "#2a0e00", marginTop: 10 }}>Admin: tekan tombol di atas untuk sesi berikutnya</p>
-          <button onClick={() => { if (window.confirm("Reset antrian ke 001?")) resetQueue(); }} style={{ marginTop: 10, background: "transparent", border: "1px dashed #2a0e00", color: "#3a1200", fontFamily: "'Raleway',sans-serif", fontSize: 10, padding: "6px 18px", borderRadius: 4, cursor: "pointer", textTransform: "uppercase" }}>🔄 Reset Antrian (Admin)</button>
-        </div>
+        )}
+
+        {status === "not-found" && (
+          <div style={{ padding: 40, border: "1px solid #3a1500", borderRadius: 14, background: "#0d0000", color: "#EB4233", fontFamily: "'Raleway',sans-serif" }}>
+            Foto tidak ditemukan atau link sudah tidak tersedia.
+          </div>
+        )}
+
+        {status === "error" && (
+          <div style={{ padding: 40, border: "1px solid #3a1500", borderRadius: 14, background: "#0d0000", color: "#EB4233", fontFamily: "'Raleway',sans-serif" }}>
+            Tidak dapat terhubung ke server foto.
+          </div>
+        )}
+
+        {status === "ready" && (
+          <div className="fade-up2">
+            <div style={{ background: "#fff", padding: 10, borderRadius: 14, display: "inline-block", maxWidth: "100%", boxShadow: "0 12px 50px #000" }}>
+              <img
+                src={photoUrl}
+                alt="Hasil foto AUDEAPIX"
+                onError={() => setStatus("not-found")}
+                style={{ display: "block", maxWidth: "100%", maxHeight: "70vh", height: "auto", borderRadius: 8 }}
+              />
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "center", gap: 10, flexWrap: "wrap", marginTop: 18 }}>
+              <a
+                href={photoUrl}
+                download
+                style={{
+                  background: "linear-gradient(135deg,#EB4233,#a02818)",
+                  color: "#fff",
+                  fontFamily: "'Cinzel',serif",
+                  fontWeight: 600,
+                  fontSize: 12,
+                  letterSpacing: "0.15em",
+                  padding: "13px 28px",
+                  borderRadius: 4,
+                  textTransform: "uppercase",
+                  textDecoration: "none",
+                }}
+              >
+                ↓ Simpan Foto
+              </a>
+              <button
+                onClick={async () => {
+                  if (navigator.share) {
+                    try {
+                      await navigator.share({ title: "Foto AUDEAPIX", url: window.location.href });
+                    } catch (_) {}
+                  } else {
+                    await navigator.clipboard?.writeText(window.location.href);
+                    window.alert("Link foto sudah disalin.");
+                  }
+                }}
+                style={{
+                  background: "transparent",
+                  border: "1px solid #EB4233",
+                  color: "#EB4233",
+                  fontFamily: "'Cinzel',serif",
+                  fontWeight: 600,
+                  fontSize: 12,
+                  letterSpacing: "0.15em",
+                  padding: "12px 28px",
+                  borderRadius: 4,
+                  textTransform: "uppercase",
+                  cursor: "pointer",
+                }}
+              >
+                ↗ Bagikan
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </Screen>
   );
@@ -990,8 +1152,12 @@ function useHashRoute() {
 
 export default function App() {
   const hash = useHashRoute();
-  const m = hash.match(/^#\/queue\/(\d+)$/);
-  if (m) return <QueueDisplayPage number={m[1].padStart(3, "0")} />;
+  const photoMatch = hash.match(/^#\/photo\/([A-Za-z0-9_-]+)$/);
+  if (photoMatch) return <PhotoViewerPage photoId={photoMatch[1]} />;
+
+  const queueMatch = hash.match(/^#\/queue\/(\d+)$/);
+  if (queueMatch) return <QueueDisplayPage number={queueMatch[1].padStart(3, "0")} />;
+
   return <MainFlow />;
 }
 
@@ -1001,8 +1167,17 @@ function MainFlow() {
   const [template, setTemplate] = useState(null);
   const [photos,   setPhotos]   = useState([]);
   const [queueNum, setQueueNum] = useState(null);
+  const [photoUrl, setPhotoUrl] = useState(null);
 
-  const reset = () => { setStep("landing"); setPkg(null); setTemplate(null); setPhotos([]); setQueueNum(null); window.location.hash = ""; };
+  const reset = () => {
+    setStep("landing");
+    setPkg(null);
+    setTemplate(null);
+    setPhotos([]);
+    setQueueNum(null);
+    setPhotoUrl(null);
+    window.location.hash = "";
+  };
   const goToCamera = t => { const n = getNextQueue(); setTemplate(t); setQueueNum(n); setStep("camera"); };
 
   return (
@@ -1012,8 +1187,27 @@ function MainFlow() {
       {step === "package"  && <PackagePage  onSelect={p => { setPkg(p); setStep("payment"); }} />}
       {step === "payment"  && <PaymentPage  pkg={pkg} onConfirm={() => setStep("template")} />}
       {step === "template" && <TemplatePage pkg={pkg} onSelect={goToCamera} />}
-      {step === "camera"   && <CameraPage   pkg={pkg} template={template} queueNum={queueNum} onDone={p => { setPhotos(p); setStep("queue"); }} />}
-      {step === "queue"    && <QueueTicketPage queueNum={queueNum} pkg={pkg} template={template} onHome={reset} />}
+      {step === "camera"   && (
+        <CameraPage
+          pkg={pkg}
+          template={template}
+          queueNum={queueNum}
+          onDone={result => {
+            setPhotos(result.selectedPhotos || []);
+            setPhotoUrl(result.photoUrl || null);
+            setStep("queue");
+          }}
+        />
+      )}
+      {step === "queue"    && (
+        <QueueTicketPage
+          queueNum={queueNum}
+          pkg={pkg}
+          template={template}
+          photoUrl={photoUrl}
+          onHome={reset}
+        />
+      )}
     </>
   );
 }
